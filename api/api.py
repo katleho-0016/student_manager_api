@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import sqlite3
 
 import psycopg2
-from flask import Flask,jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 load_dotenv()
@@ -62,40 +62,72 @@ def get_student(student_id):
         return jsonify({'Run time Error': str(e)}),500
 
 
+@app.route("/api/students/add_student", methods=['POST'])
+def add_student():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No JSON data provided'}), 400
 
-def setup():
-    ##create table
-    table = """CREATE TABLE IF NOT EXISTS students (
-            id INTEGER PRIMARY KEY,
-            name TEXT,
-            surname TEXT,
-            age INTEGER,
-            level INTEGER
-    );
-    """
-    insert_statement = """INSERT INTO students (id, name, surname, age, level) VALUES (%s, %s, %s, %s, %s)"""
-    sample_data = [
-        (1, "amanda", "Moloi", 2, 1),
-        (2, "Tshitshi", "Mofokeng", 5, 3),
-        (3, "Tshepang", "Diekedi", 4, 2)
-    ]
+        # 2. Check required fields
+    required_fields = ['id', 'name', 'age', 'email', 'grade']
+    for field in required_fields:
+        if field not in data:
+            return jsonify({'error': f'Missing required field: {field}'}), 400
 
+    # 3. Type validation
     try:
-        with psycopg2.connect(os.getenv("db_url")) as conn:
-            print("connected to database")
+        student_id = int(data['id'])
+        age = int(data['age'])
+        surname = str(data['surname'])
+        name = str(data['name']).strip()
+        level = int(data['level'])
+
+    except (ValueError, TypeError):
+        return jsonify({'error': 'Invalid Parameters'}), 400
+
+    statement = f"INSERT INTO students VALUES (%s,%s,%s,%s,%s)"
+    params = (student_id,name,surname,age,level)
+    try:
+        with psycopg2.connect(os.getenv('db_url')) as conn:
             with conn.cursor() as cursor:
-                cursor.execute(table)
-                cursor.executemany(insert_statement, sample_data)
-                conn.commit()
-                print("Table created successfully")
+                cursor.execute(statement,params)
+                cursor.close()
+                conn.close()
+                return jsonify("Student added successfully"),200
 
     except psycopg2.Error as e:
-        print(f"Database error occurred: {e}")
+        print(jsonify({'database error': str(e)})),500
     except Exception as e:
-        print(f"Something went wrong: {e}")
+        return jsonify({'Run time Error': str(e)}),500
 
+
+@app.route("/api/students/<int:student_id>", methods=['DELETE'])
+def delete_student(student_id):
+    """
+    DELETE /api/students/123
+    """
+    statement = "DELETE FROM students WHERE id = %s"
+
+    try:
+        with psycopg2.connect(os.getenv('db_url')) as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(statement, (student_id,))
+                rows_deleted = cursor.rowcount
+                conn.commit()
+
+                if rows_deleted == 0:
+                    return jsonify({'error': 'Student not found'}), 404
+
+                return jsonify({
+                    'message': 'Student deleted successfully',
+                    'id': student_id
+                }), 200
+
+    except psycopg2.Error as e:
+        return jsonify({'error': 'Database error occurred'}), 500
+    except Exception as e:
+        return jsonify({'error': 'Internal server error'}), 500
 
 
 if __name__ == "__main__":
-    # setup()
     app.run(debug=True)
