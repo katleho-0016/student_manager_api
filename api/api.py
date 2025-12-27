@@ -4,6 +4,7 @@ import sqlite3
 
 import psycopg2
 from flask import Flask, jsonify, request
+from rate_limiter import rate_limit
 
 app = Flask(__name__)
 load_dotenv()
@@ -22,6 +23,7 @@ def home():
     })
 
 
+@rate_limit(60, 60)
 @app.route('/api/students', methods=['GET'])
 def get_all_students():
     statement = "SELECT * FROM students ORDER BY id"
@@ -38,6 +40,7 @@ def get_all_students():
     except Exception as e:
         return jsonify({'Run time Error': str(e)}),500
 
+@rate_limit(30, 60)
 @app.route("/api/students/<student_id>", methods=['GET'])
 def get_student(student_id):
     statement = f"SELECT * FROM students WHERE id = %s"
@@ -62,6 +65,7 @@ def get_student(student_id):
         return jsonify({'Run time Error': str(e)}),500
 
 
+@rate_limit(20, 60)
 @app.route("/api/students/add_student", methods=['POST'])
 def add_student():
     data = request.get_json()
@@ -101,6 +105,7 @@ def add_student():
         return jsonify({'Run time Error': str(e)}),500
 
 
+@rate_limit(30, 60)
 @app.route("/api/students/<int:student_id>", methods=['DELETE'])
 def delete_student(student_id):
     """

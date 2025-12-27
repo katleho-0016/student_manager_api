@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4ec05c8d-3999-4ecc-b6ee-08bbb0df47e3" name="Changes" comment="added POST function and DELETE function for adding and removing student, moved setup out the main api file">
-      <change afterPath="$PROJECT_DIR$/api/student.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.sh" beforeDir="false" afterPath="$PROJECT_DIR$/build.sh" afterDir="false" />
-    </list>
+    <list default="true" id="4ec05c8d-3999-4ecc-b6ee-08bbb0df47e3" name="Changes" comment="added frontend files" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -122,7 +116,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766603584177</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="added frontend files">
+      <option name="closed" value="true" />
+      <created>1766649033091</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1766649033091</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -130,6 +132,7 @@
     <MESSAGE value="updated git ignore file" />
     <MESSAGE value="deleted file" />
     <MESSAGE value="added POST function and DELETE function for adding and removing student, moved setup out the main api file" />
-    <option name="LAST_COMMIT_MESSAGE" value="added POST function and DELETE function for adding and removing student, moved setup out the main api file" />
+    <MESSAGE value="added frontend files" />
+    <option name="LAST_COMMIT_MESSAGE" value="added frontend files" />
   </component>
 </project>
